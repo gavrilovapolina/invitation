@@ -20,6 +20,8 @@
     background:var(--bg);
     color:var(--ink);
     overflow:hidden;
+    height:100vh; height:100dvh;
+    display:flex; flex-direction:column;
   }
 
   .ticker{
@@ -27,16 +29,20 @@
     border-bottom:1px solid var(--line);
     background:var(--ink);
     padding:9px 0;
+    flex:0 0 auto;
+    display:none;
   }
+  .ticker.bottom{ border-bottom:none; border-top:1px solid var(--line); }
+  body.show-ticker .ticker{ display:block; }
   .ticker-track{ display:flex; white-space:nowrap; animation:scroll 18s linear infinite; }
+  .ticker.bottom .ticker-track{ animation-direction:reverse; }
   .ticker span{ color:var(--bg); font-size:12.5px; letter-spacing:.05em; padding:0 14px; }
   .ticker span.dot{ color:var(--acc); }
   @keyframes scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
 
   .wrap{
     position:relative;
-    height:calc(100vh - 40px);
-    height:calc(100dvh - 40px);
+    flex:1 1 auto;
     display:flex; align-items:center; justify-content:center;
     touch-action:none;
   }
@@ -191,9 +197,9 @@
   h1 em{ font-style:italic; font-weight:400; background:var(--acc); color:var(--acc-ink); padding:0 6px; }
   .sub{ font-size:15px; color:var(--ink-2); margin-bottom:28px; }
   .details{ border-top:1px solid var(--line); margin-bottom:28px; }
-  .row{ display:flex; align-items:baseline; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); }
-  .row .k{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); }
-  .row .v{ font-size:17px; font-weight:600; color:var(--ink); }
+  .row{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .row .k{ flex:0 0 auto; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); }
+  .row .v{ flex:1 1 auto; text-align:right; font-size:17px; font-weight:600; color:var(--ink); }
   .rsvp-group{ display:flex; gap:10px; }
   .rsvp-btn{
     flex:1; border:none; background:var(--ink); color:var(--bg);
@@ -204,10 +210,8 @@
   .rsvp-btn:active{ transform:scale(.98); }
   .rsvp-btn.no{ background:transparent; color:var(--ink); border:1px solid var(--line); }
   .rsvp-btn.no:hover{ background:var(--line); color:var(--ink); }
-  .thanks{ text-align:center; font-size:14px; font-weight:600; padding:16px 0; display:none; }
-  .thanks::before{ content:"✦ "; color:var(--acc); }
-  .thanks.no::before{ content:"— "; color:var(--ink-2); }
-  .foot{ margin-top:18px; font-size:12px; color:var(--ink-2); }
+  .thanks{ text-align:center; font-size:22px; font-weight:700; line-height:1.4; max-width:320px; }
+  .thanks-sub{ display:block; margin-top:10px; font-size:15px; font-weight:400; color:var(--ink-2); }
 </style>
 </head>
 <body>
@@ -273,40 +277,46 @@
 
   <div class="stage" id="stageCard">
     <div class="card">
-      <h1 id="mainTitle">Полина зовёт тебя на свой <em>день рождения</em></h1>
-      <div class="sub">Будет тепло, вкусно и по-настоящему весело</div>
+      <h1 id="mainTitle">Полина зовёт тебя<br>на свой <em>день рождения</em></h1>
+      <div class="sub">Будет тепло, вкусно и по-настоящему весело!</div>
       <div class="details">
         <div class="row"><span class="k">Дата</span><span class="v">5 сентября</span></div>
         <div class="row"><span class="k">Время</span><span class="v">18:00</span></div>
-        <div class="row"><span class="k">Место</span><span class="v" id="place">Glavstandup Hall (ул. Садовая-Спасская, 21/1)</span></div>
+        <div class="row"><span class="k">Место</span><span class="v" id="place">Glavstandup Hall (ул. Садовая-Спасская, д. 21/1)</span></div>
       </div>
       <div class="rsvp-group" id="rsvpGroup">
         <button class="rsvp-btn" onclick="rsvp('yes')">Приду 🎉</button>
         <button class="rsvp-btn no" onclick="rsvp('no')">Не приду</button>
       </div>
-      <div class="thanks" id="thanksYes">Записала тебя — до встречи<br><span class="foot">Буду рада тебя видеть</span></div>
-      <div class="thanks no" id="thanksNo">Жаль, что не получится — обнимаю</div>
     </div>
+  </div>
+
+  <div class="stage" id="stageThanks">
+    <div class="thanks" id="thanksMsg"></div>
   </div>
 
 </div>
 
+<div class="ticker bottom"><div class="ticker-track" id="tickerTrackBottom"></div></div>
+
 <script>
   // бегущая строка
-  const words = ["Приглашение на день рождения","✦","30 августа","✦","12:00","✦"];
-  const track = document.getElementById('tickerTrack');
-  for(let r=0;r<4;r++){
-    words.forEach(w=>{
-      const s = document.createElement('span');
-      if(w==="✦") s.className="dot";
-      s.textContent = w;
-      track.appendChild(s);
-    });
-  }
+  const words = ["Приглашение на день рождения","✦","5 сентября","✦","18:00","✦"];
+  [document.getElementById('tickerTrack'), document.getElementById('tickerTrackBottom')].forEach(track=>{
+    for(let r=0;r<4;r++){
+      words.forEach(w=>{
+        const s = document.createElement('span');
+        if(w==="✦") s.className="dot";
+        s.textContent = w;
+        track.appendChild(s);
+      });
+    }
+  });
 
   function goStage(id){
     document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    document.body.classList.toggle('show-ticker', id === 'stageCard');
   }
 
   /* ---- стадия 1: тап по шарикам — разлёт осколков ---- */
@@ -385,12 +395,15 @@
   const guestName = params.get('to');
   if(guestName){
     document.getElementById('mainTitle').innerHTML =
-      guestName + ', Полина зовёт тебя на свой <em>день рождения</em>';
+      guestName + ', Полина зовёт тебя<br>на свой <em>день рождения</em>';
   }
 
   function rsvp(answer){
-    document.getElementById('rsvpGroup').style.display = 'none';
-    document.getElementById(answer === 'yes' ? 'thanksYes' : 'thanksNo').style.display = 'block';
+    const msg = document.getElementById('thanksMsg');
+    msg.innerHTML = answer === 'yes'
+      ? 'Записала тебя — до встречи<span class="thanks-sub">Буду рада тебя видеть</span>'
+      : 'Жаль, что не получится — обнимаю';
+    goStage('stageThanks');
 
     const who = guestName || 'Без имени (открыли общую ссылку)';
     const text = (answer === 'yes' ? '🎉 ' : '❌ ') + who + ' — ' + (answer === 'yes' ? 'придёт' : 'не придёт');
