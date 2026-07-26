@@ -212,6 +212,7 @@
   .rsvp-btn.no:hover{ background:var(--line); color:var(--ink); }
   .thanks{ text-align:center; font-size:22px; font-weight:700; line-height:1.4; max-width:320px; }
   .thanks-sub{ display:block; margin-top:10px; font-size:15px; font-weight:400; color:var(--ink-2); }
+  .thanks .star{ color:var(--acc); }
 </style>
 </head>
 <body>
@@ -401,7 +402,7 @@
   function rsvp(answer){
     const msg = document.getElementById('thanksMsg');
     msg.innerHTML = answer === 'yes'
-      ? 'Записала тебя — до встречи<span class="thanks-sub">Буду рада тебя видеть</span>'
+      ? '<span class="star">✦</span> До встречи! <span class="star">✦</span><span class="thanks-sub">Буду рада тебя видеть</span>'
       : 'Жаль, что не получится, но если планы изменятся&nbsp;— дай знать';
     goStage('stageThanks');
 
