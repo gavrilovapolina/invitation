@@ -408,7 +408,7 @@
     fetch(RSVP_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cid: guestCid, name: guestName, answer: answer })
+      body: JSON.stringify({ cid: guestCid, name: guestName ? encodeURIComponent(guestName) : guestName, answer: answer })
     }).catch(()=>{ /* тихо игнорируем сетевые ошибки, ответ уже показан гостю */ });
   }
 </script>
