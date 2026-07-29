@@ -409,7 +409,14 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ cid: guestCid, name: guestName ? encodeURIComponent(guestName) : guestName, answer: answer })
-    }).catch(()=>{ /* тихо игнорируем сетевые ошибки, ответ уже показан гостю */ });
+    }).catch(()=>{ /* тихо игнорируем сетевые ошибки — надёжный канал ниже, через сам Telegram */ });
+
+    // Основной надёжный канал: открываем бота напрямую в Telegram с параметром ответа.
+    // Так ответ доходит через инфраструктуру самого Telegram, а не через наш сервер,
+    // и не зависит от блокировок/прокси на стороне гостя.
+    setTimeout(()=>{
+      window.location.href = 'https://t.me/Polinas33Bot?start=rsvp_' + answer;
+    }, 400);
   }
 </script>
 </body>
